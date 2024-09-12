@@ -1,5 +1,9 @@
+using Core.Contracts;
 using Infrastructure.Context;
+using Infrastructure.Repo;
 using Microsoft.EntityFrameworkCore;
+using Service;
+using Service.Contracts;
 
 namespace CW20
 {
@@ -13,6 +17,9 @@ namespace CW20
             builder.Services.AddControllersWithViews();
             Console.WriteLine(builder.Configuration.GetConnectionString("Default"));
             builder.Services.AddDbContext<ApplicationDbContext>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+            builder.Services.AddScoped<IBookRepo, BookRepo>();
+            builder.Services.AddScoped<IBookService,BookService>();
+            builder.Services.AddScoped<IAuthorRepo, AuthorRepo>();
 
             var app = builder.Build();
 

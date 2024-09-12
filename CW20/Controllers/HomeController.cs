@@ -1,7 +1,10 @@
+using Core.Contracts;
+using Core.Models;
 using CW20.Models;
 using Infrastructure.Context;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Service.Contracts;
 using System.Diagnostics;
 
 namespace CW20.Controllers
@@ -9,17 +12,24 @@ namespace CW20.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ApplicationDbContext _context;
-        public HomeController(ILogger<HomeController> logger,ApplicationDbContext context)
+        private readonly IAuthorRepo _authorRepo;
+
+        private readonly IBookService _bookService;
+        public HomeController(ILogger<HomeController> logger,IBookService bookService,IAuthorRepo authorRepo)
         {
             _logger = logger;
-            _context = context;
+            _authorRepo = authorRepo;
+            _bookService = bookService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var a = _context.Books.Include(x=>x.Category).ToList();
+           var Authors = new List<Author>();
+           Authors.Add(await _authorRepo.GetById(2));
 
+            var book = new Book() { Name = "bookName30", IsExpert = true, Price = 555, CategoryId = 1, Authors = Authors };
+          
+            await _bookService.AddBook(book);
             return Json(new {});
         }
 
