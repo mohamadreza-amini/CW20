@@ -27,6 +27,7 @@ namespace CW20.Controllers
            var Authors = new List<Author>();
            Authors.Add(await _authorRepo.GetById(2));
 
+
             var book = new Book() { Name = "bookName30", IsExpert = true, Price = 555, CategoryId = 1, Authors = Authors };
           
             await _bookService.AddBook(book);
